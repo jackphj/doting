@@ -1,1 +1,3 @@
-[http://doting.me](http://doting.me)
+module.exports = {
+	
+};
