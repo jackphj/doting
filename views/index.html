@@ -37,27 +37,31 @@
                 <span class="nowtime"><%= noteInfo.time %></span>
             </div>
             <div class="tip-bar clearfix">
-                <span class="fr">已自动保存</span>
+                <span class="fr" id="saveTip">已自动保存</span>
             </div>
             <div class="note-title">
                 <div class="inpt-wrapper">
                     <input type="text" id="note-title" name="note-title" value="<%= noteInfo.title %>">
+                    <input type="hidden" id="note-pwd" name="note-pwd" value="">
                     <label id="note-title-placeholder" for="note-title">标题<small>Title</small></label>
-                </div>                    
+                </div>
             </div>
+            <form id="paper-form" action="http://<%= noteInfo.url %>">
             <div class="note-content">
                 <textarea name="notetext" id="notetext" spellcheck="true"><%= noteInfo.content %></textarea>
             </div>
             <div class="paper-footer">
                 <div class="btn-group">
-                    <a href="#" class="clear">清除</a>
-                    <a href="#" class="save">保存</a>
+                    <button type="reset" class="paper-btn clear fadeInUp">还原</button>
+                    <a href="#" id="note-save" class="paper-btn save" data-status="ready">保存</a>
                 </div>
             </div>
+            </form>
         </div>
     </div>
 
 
-
+<script src="https://dn-cndserver.qbox.me/jquery-1.11.3.min.js"></script>
+<script src="/js/app.js"></script>
 </body>
 </html>

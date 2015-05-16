@@ -14,7 +14,7 @@ module.exports = {
 	site_headers: [
 		'<meta name="author" content="GallenHu@foxmail" />'
 	],
-    
+
     cookieSecret: 'doting',
 
     // mongodb 配置

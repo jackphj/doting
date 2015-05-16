@@ -1,7 +1,9 @@
 var settings = require('../settings');
 var auth = require('../middlewares/auth');
 var tools = require('../common/tools.js');
+var Note = require('../controllers').Note;
 var moment = require('moment');
+var crypto = require('crypto');
 
 module.exports = function(app){
 	var siteInfo = {
@@ -18,7 +20,7 @@ module.exports = function(app){
 		tools.getFreshNoteUrl(function(err, noteUrl){
 			if(err)
 				res.render('error', {message: err, error: {status: 503, stack: null}});
-			
+
 			res.redirect('/'+noteUrl);
 		});
 	});
@@ -56,7 +58,104 @@ module.exports = function(app){
 				noteInfo: noteInfo
 			});
 		});
-		
+
+	});
+
+	app.post('/:noteurl', function(req, res){
+		var noteurl = req.params.noteurl;
+		var md5 = crypto.createHash('md5');
+
+		var title = req.body.title,
+		    psw = md5.update(req.body.psw).digest('hex'),
+		    content = req.body.cont;
+		var result = {};
+
+
+		if(psw === ""){
+			result.error = '1';
+			result.message = 'not get password';
+
+			//返回客户端
+			if(!res.headersSent){
+				res.statusCode=200;
+		        res.sendDate=false;
+		        res.setHeader("Content-Type","text/plain;charset=utf-8");
+		        res.setHeader("Access-Control-Allow-Origin","http://localhost:3000");
+			}
+			res.end(result.toString());
+		}
+		tools.getNoteByUrl(noteurl, function(note){
+			if(note === null){ //新建一条
+				return Note.newAndSaveNote(noteurl, title, content, '', '', 0, null, null, false, false, function(err, note){
+					if(err){
+						result.error = '2';
+						result.message = err;
+
+						//返回客户端
+						if(!res.headersSent){
+							res.statusCode=200;
+					        res.sendDate=false;
+					        res.setHeader("Content-Type","text/plain;charset=utf-8");
+					        res.setHeader("Access-Control-Allow-Origin","http://localhost:3000");
+						}
+						res.end(JSON.stringify(result));
+					}
+
+					result.error = '0';
+					result.message = note;
+
+					//返回客户端
+					res.writeHead(200, {
+		                'Content-Type': 'text/plain;charset=utf-8'
+		            });
+					res.end(JSON.stringify(result));
+				});
+			}else{
+				if(note.key){  //有密码
+					if(note.key === psw){
+						return Note.updateNote(noteurl, title, content, function(note){
+							result.error = '0';
+							result.message = note;
+
+							//返回客户端
+							if(!res.headersSent){
+								res.statusCode=200;
+						        res.sendDate=false;
+						        res.setHeader("Content-Type","text/plain;charset=utf-8");
+						        res.setHeader("Access-Control-Allow-Origin","http://localhost:3000");
+							}
+							res.end(JSON.stringify(result));
+						});
+					}
+					else{  //密码错误
+						result.error = '3';
+						result.message = 'Auth error 非法操作';
+
+						//返回客户端
+						if(!res.headersSent){
+							res.statusCode=200;
+					        res.sendDate=false;
+					        res.setHeader("Content-Type","text/plain;charset=utf-8");
+					        res.setHeader("Access-Control-Allow-Origin","http://localhost:3000");
+						}
+						res.end(JSON.stringify(result));
+					}
+				}
+				else{  //无密码
+					return Note.updateNote(noteurl, title, content, function(note){
+						result.error = '0';
+						result.message = note;
+
+						//返回客户端
+						res.writeHead(200, {
+			                'Content-Type': 'text/plain;charset=utf-8'
+			            });
+						res.end(JSON.stringify(result));
+					});
+				}
+			}
+		});
+
 	});
 
 

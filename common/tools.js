@@ -3,8 +3,6 @@ var eventproxy = require('eventproxy');
 
 
 
-
-
 function getRandom(type, length) {
     var str = "",
         which,
