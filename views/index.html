@@ -1,11 +1,63 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><%= title %></title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=1024" />
+    <title><%= siteInfo.sitename %></title>
+    <meta name="keywords" content="<%= siteInfo.keywords %>" />
+    <meta name="description" content="<%= siteInfo.describe %>" />
+    <link rel="shortcut icon" type="image/x-ico" href="https://dn-doting.qbox.me/favicon.ico" />
+    <link rel='stylesheet' href='/css/base.css' />
+    <link rel='stylesheet' href='/css/style.css' />
+    <!--[if lt IE 8]>
+    <link rel='stylesheet' href='/css/ie.css' />
+    <![endif]-->
   </head>
-  <body>
-    <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
-  </body>
+<body>
+    <!-- header -->
+    <div id="header">
+        <div class="left">
+            <h1 class="logo">
+                <a href="//<%= siteInfo.sitedomain %>" title="<%= siteInfo.describe %>"><%= siteInfo.title %></a>
+            </h1>
+            <span class="more">更多</span>
+        </div>
+        <div class="right fr">
+            <div class="weather">
+                <span class="city">上海:</span><span>晴转多云 20'</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- main -->
+    <div id="main">
+        <div id="paper">
+            <div class="info-bar">
+                <span>http://<%= noteInfo.url %></span>
+                <span class="nowtime"><%= noteInfo.time %></span>
+            </div>
+            <div class="tip-bar clearfix">
+                <span class="fr">已自动保存</span>
+            </div>
+            <div class="note-title">
+                <div class="inpt-wrapper">
+                    <input type="text" id="note-title" name="note-title" value="<%= noteInfo.title %>">
+                    <label id="note-title-placeholder" for="note-title">标题<small>Title</small></label>
+                </div>                    
+            </div>
+            <div class="note-content">
+                <textarea name="notetext" id="notetext" spellcheck="true"><%= noteInfo.content %></textarea>
+            </div>
+            <div class="paper-footer">
+                <div class="btn-group">
+                    <a href="#" class="clear">清除</a>
+                    <a href="#" class="save">保存</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+</body>
 </html>

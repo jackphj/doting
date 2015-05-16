@@ -1,0 +1,301 @@
+$paperWidth: 860px;
+$headerHeight: 45px;
+$logoBGC: #5ca7ba;
+$logoBGC2: #579daf;
+
+html{height: 100%;}
+body{
+	background: #e5e5e5;
+	height: 100%;
+	min-width: 1000px;
+}
+.fl{
+	float: left;
+}
+.fr{
+	float: right;
+}
+.clearfix{
+    *zoom: 1;
+    &:after{
+        display: block;
+        content: '';
+        height: 0;
+        clear: both;
+        overflow: hidden;
+    }
+}
+
+/* scrollbar style from http://maxvoltar.com/, http://almaer.com/scrollbar/debug.html */
+
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-track-piece {
+    background: #f2f4f8;
+}
+
+::-webkit-scrollbar-button:start:decrement,
+::-webkit-scrollbar-button:end:increment {
+    display: block;
+    height: 12px;
+    background-color: #d5d9df;
+}
+
+::-webkit-scrollbar-thumb:vertical {
+    height: 25px;
+    background-color: #d5d9df;
+}
+
+::-webkit-scrollbar-button:start:decrement {
+    -webkit-border-top-right-radius: 5px;
+    -webkit-border-top-left-radius: 5px;
+}
+
+::-webkit-scrollbar-button:end:increment {
+    -webkit-border-bottom-right-radius: 5px;
+    -webkit-border-bottom-left-radius: 5px;
+}
+
+:focus {
+    border: none;
+    outline: 0;
+}
+
+*::-moz-focus-inner { border: 0; }
+
+body ::selection{
+    color: #fff;
+    background-color: #825d5b;
+    text-shadow:none;
+}
+
+
+//header
+#header{
+	height: $headerHeight;
+	background: #fff;
+	position: absolute;
+	top: 0;	
+	z-index: 9;
+	width: 100%;
+	-webkit-box-shadow: 0 2px 4px rgba(0,0,0,.3);
+    -moz-box-shadow: 0 2px 4px rgba(0,0,0,.3);
+    box-shadow: 0 2px 4px rgba(0,0,0,.3);
+    /*for ie6,7,8*/
+    filter: progid:DXImageTransform.Microsoft.Shadow(color='#999999', Direction=180, Strength=2);
+
+    .logo{
+    	float: left;
+    	width: 143px;
+
+    	a{
+    		display: block;
+    		width: 143px;
+    		height: 45px;
+    		text-indent: -9999em;
+            background-color: $logoBGC;
+            background-image: url(../images/logo.png);
+            background-repreat: no-repeat;
+    	}
+    }
+
+    .more{
+    	display: block;
+    	float: left;
+    	width: 45px;
+    	height: 45px;
+        background-color: $logoBGC;
+        background-image: url(../images/ico_more.png);
+        background-repreat: no-repeat;
+        border-left: 1px solid #9dcad6;
+    	text-indent: -9999em;
+        cursor: pointer;
+    }
+    .left:hover .logo,
+    .left:hover .more{
+        background-color: $logoBGC2;
+    }
+
+
+    .weather{
+    	height: 45px;
+    	line-height: 45px;
+    	margin-right: 10px;
+    	padding-right: 10px;
+    	font-size: 16px;
+    	color: #404040;
+    	&:hover{
+    		background: #ececec;
+    	}
+
+    	.city{
+    		display: inline-block;
+    		padding-left: 40px;
+    		background: url(../images/ico_cloud.png) 10px 14px no-repeat;
+    	}
+    }
+}
+
+
+//main
+#main{
+	height: 100%;
+    line-height: 1;
+}
+
+#paper{
+	position: relative;
+	top: 0;
+	bottom: 0;	
+	width: $paperWidth;
+	height: 100%;
+	background: #fff;
+	margin: 0 auto;
+
+    $leftWhite: 93px;
+    $conWidth: 674px;
+
+    .info-bar{
+        position: absolute;
+        top: $headerHeight + 30px;
+        left: $leftWhite;
+        width: $conWidth;
+        font-size: 14px;
+        color: #ccc;
+
+        .nowtime{
+            position: absolute;
+            right: 0;
+        }
+    }
+
+    .tip-bar{
+        position: absolute;
+        top: $headerHeight + 30px +20px;
+        left: $leftWhite;
+        width: $conWidth;
+        font-size: 14px;
+        color: #ccc;
+        cursor: default;
+    }
+    .note-title{
+        position: absolute;
+        top: $headerHeight + 30px +20px + 24px;
+        left: $leftWhite;
+        width: $conWidth;
+
+        $inptWidth: 340px;
+
+        .inpt-wrapper{
+            position: relative;
+            width: $inptWidth;
+            height: 35px;
+            margin: 0 auto;
+            border-bottom: 1px solid #efefef;
+
+            #note-title{
+                display: block;
+                width: $inptWidth - 16px;
+                padding: 0 8px;
+                height: 34px;
+                line-height: 34px;
+                border: none;
+                font-size: 21px;
+                font-family: 'Microsoft YaHei UI', 'Microsoft YaHei', SimSun, sans-serif;
+                font-style: normal;
+                font-weight: bold;
+                color: #000;
+                text-align: center;
+                outline: none;
+            }
+            #note-title-placeholder{
+                position: absolute;
+                left: $inptWidth/2 - 50px;
+                top: 6px;
+                color: #dedede;
+                font-size: 21px;
+                font-style: italic;
+
+                small{
+                    margin-left: 2px;
+                    font-size: 14px;
+                    font-family: Arial;
+                    font-style: italic;
+                }
+            }
+
+
+        }
+    }
+    .note-content{
+        position: absolute;
+        top: $headerHeight + 30px +20px +24px +60px;
+        left: $leftWhite;
+        width: $conWidth;
+        bottom: 100px;
+
+        #notetext{
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0 6px 0 0;
+            border: 1px solid transparent;
+            background: transparent;
+            resize: none;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            font: normal 15px Arial, Helvetica, sans-serif;
+            line-height: 20px;
+            color: #3a3b3c;
+        }
+    }
+
+    .paper-footer{
+        position: absolute;
+        bottom: 50px;
+        left: 0;
+
+        .btn-group{
+            position: absolute;
+            left: 523px;
+            width: 260px;
+
+            a{
+                display: inline-block;
+                width: 113px;
+                height: 37px;
+                line-height: 37px;
+                text-align: center;
+                font-size: 16px;
+                text-decoration: none;
+            }
+            .clear{
+                margin-right: 10px;
+                border: 1px solid #9dd6c5;
+                background: inherit;
+                border-radius: 3px;
+                color: #00c35a;
+                &:hover{
+                    background: #efefef;
+                    color: #00c35a;
+                }
+            }
+            .save{
+                border: 1px solid #00c35a;
+                background: #00c35a;
+                border-radius: 3px;
+                color: #fff;
+                &:hover{
+                    color: #fff;
+                    background: #1ac96a;
+                }
+            }
+        }
+
+        
+    }
+
+}
