@@ -15,7 +15,7 @@ module.exports = {
 		'<meta name="author" content="GallenHu@foxmail" />'
 	],
     
-    cookieSecret: 'doting',
+    cookieSecret: 'doting2',
 
     // mongodb 配置
     db: 'mongodb://127.0.0.1/doting_dev',
