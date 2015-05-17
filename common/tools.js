@@ -67,9 +67,24 @@ function getNoteByUrl(url, callback){
 
 
 
+function getClientIP(req){
+    var ipAddress;
+    var headers = req.headers;
+    var forwardedIpsStr = headers['x-real-ip'] || headers['x-forwarded-for'];
+    forwardedIpsStr ? ipAddress = forwardedIpsStr : ipAddress = null;
+    if (!ipAddress) {
+      ipAddress = req.connection.remoteAddress;
+    }
+    return ipAddress;
+}
+
+
+
+
 // Exports
 module.exports = {
     getRandom: getRandom,
     getFreshNoteUrl: getFreshNoteUrl,
-    getNoteByUrl: getNoteByUrl
+    getNoteByUrl: getNoteByUrl,
+    getClientIP: getClientIP
 };

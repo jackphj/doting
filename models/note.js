@@ -7,6 +7,8 @@ var NoteSchema = new Schema({
   title: { type: String },
   content: { type: String },
   author_id: { type: ObjectId },
+  creator_ip: { type: String },
+  updater_ip: { type: String },
   key: { type: String }, // 密码
   visit_count: { type: Number, default: 0 },
   create_at: { type: Date, default: Date.now },

@@ -68,6 +68,7 @@ module.exports = function(app){
 		var title = req.body.title,
 		    psw = md5.update(req.body.psw).digest('hex'),
 		    content = req.body.cont;
+		var ip = tools.getClientIP(req);
 		var result = {};
 
 
@@ -86,10 +87,11 @@ module.exports = function(app){
 		}
 		tools.getNoteByUrl(noteurl, function(note){
 			if(note === null){ //新建一条
-				return Note.newAndSaveNote(noteurl, title, content, '', '', 0, null, null, false, false, function(err, note){
+				return Note.newAndSaveNote(noteurl, title, content, '', ip, ip, '', 0, null, null, false, false, function(err, note){
 					if(err){
 						result.error = '2';
 						result.message = err;
+						result.time = moment().format('YYYY-MM-DD HH:mm:ss');
 
 						//返回客户端
 						if(!res.headersSent){
@@ -103,19 +105,24 @@ module.exports = function(app){
 
 					result.error = '0';
 					result.message = note;
+					result.time = moment().format('YYYY-MM-DD HH:mm:ss');
 
 					//返回客户端
-					res.writeHead(200, {
-		                'Content-Type': 'text/plain;charset=utf-8'
-		            });
+					if(!res.headersSent){
+						res.statusCode=200;
+				        res.sendDate=false;
+				        res.setHeader("Content-Type","text/plain;charset=utf-8");
+				        res.setHeader("Access-Control-Allow-Origin","http://localhost:3000");
+					}
 					res.end(JSON.stringify(result));
 				});
 			}else{
 				if(note.key){  //有密码
 					if(note.key === psw){
-						return Note.updateNote(noteurl, title, content, function(note){
+						return Note.updateNote(noteurl, title, content, ip, function(note){
 							result.error = '0';
 							result.message = note;
+							result.time = moment().format('YYYY-MM-DD HH:mm:ss');
 
 							//返回客户端
 							if(!res.headersSent){
@@ -130,6 +137,7 @@ module.exports = function(app){
 					else{  //密码错误
 						result.error = '3';
 						result.message = 'Auth error 非法操作';
+						result.time = moment().format('YYYY-MM-DD HH:mm:ss');
 
 						//返回客户端
 						if(!res.headersSent){
@@ -142,14 +150,18 @@ module.exports = function(app){
 					}
 				}
 				else{  //无密码
-					return Note.updateNote(noteurl, title, content, function(note){
+					return Note.updateNote(noteurl, title, content, ip, function(note){
 						result.error = '0';
 						result.message = note;
+						result.time = moment().format('YYYY-MM-DD HH:mm:ss');
 
 						//返回客户端
-						res.writeHead(200, {
-			                'Content-Type': 'text/plain;charset=utf-8'
-			            });
+						if(!res.headersSent){
+							res.statusCode=200;
+					        res.sendDate=false;
+					        res.setHeader("Content-Type","text/plain;charset=utf-8");
+					        res.setHeader("Access-Control-Allow-Origin","http://localhost:3000");
+						}
 						res.end(JSON.stringify(result));
 					});
 				}

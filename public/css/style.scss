@@ -3,6 +3,8 @@ $headerHeight: 45px;
 $logoBGC: #5ca7ba;
 $logoBGC2: #579daf;
 
+#cnzz_stat_icon_1255116367{display: none !important;}
+
 html{height: 100%;}
 body{
 	background: #e5e5e5;
@@ -154,8 +156,6 @@ body ::selection{
 	-webkit-box-shadow: 0 2px 4px rgba(0,0,0,.3);
     -moz-box-shadow: 0 2px 4px rgba(0,0,0,.3);
     box-shadow: 0 2px 4px rgba(0,0,0,.3);
-    /*for ie6,7,8*/
-    filter: progid:DXImageTransform.Microsoft.Shadow(color='#999999', Direction=180, Strength=2);
 
     .logo{
     	float: left;
@@ -347,6 +347,7 @@ body ::selection{
                 text-align: center;
                 font-size: 16px;
                 text-decoration: none;
+                cursor: pointer;
             }
             .inline-block{
                 display: inline-block;

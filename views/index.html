@@ -9,8 +9,12 @@
     <link rel="shortcut icon" type="image/x-ico" href="https://dn-doting.qbox.me/favicon.ico" />
     <link rel='stylesheet' href='/css/base.css' />
     <link rel='stylesheet' href='/css/style.css' />
-    <!--[if lt IE 8]>
+    <!--[if lte IE 9]>
     <link rel='stylesheet' href='/css/ie.css' />
+    <script src="/js/ie.js"></script>
+    <![endif]-->
+    <!--[if lte IE 6]>
+    <meta http-equiv="refresh" content="0; url=//hinpc.com/x/killie.html" />
     <![endif]-->
   </head>
 <body>
@@ -24,7 +28,7 @@
         </div>
         <div class="right fr">
             <div class="weather">
-                <span class="city">上海:</span><span>晴转多云 20'</span>
+                <span class="city">城市天气</span><span class="type"></span>
             </div>
         </div>
     </div>
@@ -53,7 +57,7 @@
             <div class="paper-footer">
                 <div class="btn-group">
                     <button type="reset" class="paper-btn clear fadeInUp">还原</button>
-                    <a href="#" id="note-save" class="paper-btn save" data-status="ready">保存</a>
+                    <button id="note-save" class="paper-btn save" data-status="ready">保存</button>
                 </div>
             </div>
             </form>
@@ -63,5 +67,6 @@
 
 <script src="https://dn-cndserver.qbox.me/jquery-1.11.3.min.js"></script>
 <script src="/js/app.js"></script>
+<script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1255116367'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s11.cnzz.com/z_stat.php%3Fid%3D1255116367%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"));</script>
 </body>
 </html>
