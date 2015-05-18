@@ -1,6 +1,11 @@
 var Note = require('../controllers').Note;
 var eventproxy = require('eventproxy');
 
+var log4js = require('log4js');
+var logConfig = require('./logConfig.js');
+log4js.configure(logConfig(__dirname));
+var logInfo = log4js.getLogger('normal');
+
 
 
 function getRandom(type, length) {
@@ -33,7 +38,7 @@ var count = 0;
 function getFreshNoteUrl(callback) {
     count++;
     if (count > 50) {
-        //TODO写日志
+        logInfo.warn("请求到50次旧笔记,时间:" + new Date());
         callback('Query Url OutTime!');
     }
 
@@ -45,6 +50,7 @@ function getFreshNoteUrl(callback) {
         if (note === null) {
             callback(null, noteUrl);
         } else {
+        	logInfo.warn("请求到已存在的笔记:" + note);
             noteUrl = ep = null;
             getFreshNoteUrl(callback);
         }

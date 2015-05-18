@@ -2,6 +2,11 @@ var models = require('../models');
 var Note = models.Note;
 var moment = require('moment');
 
+var log4js    = require('log4js');
+var logConfig = require('../common/logConfig.js');
+log4js.configure(logConfig(__dirname));
+var logInfo   = log4js.getLogger('normal');
+
 
 /**
  * 根据笔记url，查找一条笔记
@@ -24,7 +29,8 @@ exports.getNoteByUrl = function (url, callback) {
 exports.updateNote = function(url, title, content, ip, callback){
     Note.findOne({note_url: url}, function (err, note) {
         if (err || !note) {
-          return callback(err);
+        	logInfo('更新笔记出错：'+ err + '笔记url:'+note_url);
+        	return callback(err);
         }
 
         note.title     = title;
