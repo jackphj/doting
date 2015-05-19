@@ -34,9 +34,13 @@ function getRandom(type, length) {
 
 
 
-var count = 0;
 function getFreshNoteUrl(callback) {
-    count++;
+	var count = (function(){
+		var id =0;
+		return function(){
+			return id++;
+		}
+	})();
     if (count > 50) {
         logInfo.warn("请求到50次旧笔记,时间:" + new Date());
         callback('Query Url OutTime!');

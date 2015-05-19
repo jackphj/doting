@@ -22,6 +22,7 @@ module.exports = function(app){
 
 	app.get('/', auth.checkMobile);
 	app.get('/', function(req, res){
+		console.log('Start~');
 		tools.getFreshNoteUrl(function(err, noteUrl){
 			if(err)
 				res.render('error', {message: err, error: {status: 503, stack: null}});
@@ -95,6 +96,7 @@ module.exports = function(app){
 			if(note === null){ //新建一条
 				return Note.newAndSaveNote(noteurl, title, content, '', ip, ip, '', 0, null, null, false, false, function(err, note){
 					if(err){
+						logInfo.info('新建出错：'+err);
 						result.error = '2';
 						result.message = err;
 						result.time = moment().format('YYYY-MM-DD HH:mm:ss');

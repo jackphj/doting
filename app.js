@@ -5,6 +5,11 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
+var log4js    = require('log4js');
+var logConfig = require('./common/logConfig.js');
+log4js.configure(logConfig(__dirname));
+var logInfo   = log4js.getLogger('normal');
+
 var routes = require('./routes/index');
 
 
@@ -28,6 +33,8 @@ routes(app);
 app.use(function(req, res, next) {
   var err = new Error('Not Found');
   err.status = 404;
+  console.log(req);
+  logInfo.error('404:'+req.url);
   next(err);
 });
 
@@ -42,6 +49,7 @@ if (app.get('env') === 'development') {
       message: err.message,
       error: err
     });
+    logInfo.error('500:'+err.message);
   });
 }
 
@@ -53,6 +61,7 @@ app.use(function(err, req, res, next) {
     message: err.message,
     error: {}
   });
+  logInfo.warn('500:'+err.message);
 });
 
 
