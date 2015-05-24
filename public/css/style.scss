@@ -1,7 +1,5 @@
 $paperWidth: 860px;
 $headerHeight: 45px;
-$logoBGC: #5ca7ba;
-$logoBGC2: #579daf;
 
 #cnzz_stat_icon_1255116367{display: none !important;}
 
@@ -28,6 +26,7 @@ body{
     }
 }
 .none{display: none;}
+iframe{ border: none; }
 
 /* scrollbar style from http://maxvoltar.com/, http://almaer.com/scrollbar/debug.html */
 
@@ -144,13 +143,42 @@ body ::selection{
     animation-name: fadeOutUp
 }
 
+@-webkit-keyframes fadeOutUp {
+    0% {
+        opacity: 1
+    }
+
+    100% {
+        opacity: 0;
+        -webkit-transform: translate3d(0,-100%,0);
+        transform: translate3d(0,-100%,0)
+    }
+}
+
+@keyframes fadeOutUp {
+    0% {
+        opacity: 1
+    }
+
+    100% {
+        opacity: 0;
+        -webkit-transform: translate3d(0,-100%,0);
+        transform: translate3d(0,-100%,0)
+    }
+}
+
+.fadeOutUp {
+    -webkit-animation-name: fadeOutUp;
+    animation-name: fadeOutUp
+}
+
 
 //header
 #header{
 	height: $headerHeight;
 	background: #fff;
 	position: absolute;
-	top: 0;	
+	top: 0;
 	z-index: 9;
 	width: 100%;
 	-webkit-box-shadow: 0 2px 4px rgba(0,0,0,.3);
@@ -166,28 +194,41 @@ body ::selection{
     		width: 143px;
     		height: 45px;
     		text-indent: -9999em;
-            background-color: $logoBGC;
-            background-image: url(../images/logo.png);
-            background-repreat: no-repeat;
+            background-image: url(../images/logo_bj.png);
+            background-repeat: no-repeat;
+            background-position: center;
     	}
     }
 
     .more{
     	display: block;
     	float: left;
-    	width: 45px;
-    	height: 45px;
-        background-color: $logoBGC;
-        background-image: url(../images/ico_more.png);
-        background-repreat: no-repeat;
-        border-left: 1px solid #9dcad6;
-    	text-indent: -9999em;
+        width: 45px;
+        height: 36px;
+        padding-top: 9px;
+        background-color: inherit;
         cursor: pointer;
+
+        .more-line{
+            display: block;
+            margin: 2px auto;
+            width: 24px;
+            height: 6px;
+            background: #545454;
+            border-radius: 2px;
+        }
+
+        &:hover{
+            background: #ececec;
+            transition: background .3s;
+
+            .more-line{
+                background: #ED485C;
+                transition: background .3s;
+            }
+        }
     }
-    .left:hover .logo,
-    .left:hover .more{
-        background-color: $logoBGC2;
-    }
+
 
 
     .weather{
@@ -386,7 +427,28 @@ body ::selection{
             }
         }
 
-        
     }
 
+}
+
+/* notice */
+.notice{
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 100px;
+    margin-left: -50px;
+    height: 30px;
+    line-height: 30px;
+    background: #1BCE7C;
+    z-index: 99999;
+    -webkit-box-shadow: 0 2px 2px rgba(0,0,0,.3);
+    -moz-box-shadow: 0 2px 2px rgba(0,0,0,.3);
+    box-shadow: 0 2px 2px rgba(0,0,0,.3);
+
+    p{
+        text-align: center;
+        color: #eee;
+        font-size: 14px;
+    }
 }

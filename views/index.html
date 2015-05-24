@@ -21,10 +21,14 @@
     <!-- header -->
     <div id="header">
         <div class="left">
+            <div class="more">
+                <span class="more-line line1"></span>
+                <span class="more-line line2"></span>
+                <span class="more-line line3"></span>
+            </div>
             <h1 class="logo">
                 <a href="//<%= siteInfo.sitedomain %>" title="<%= siteInfo.describe %>"><%= siteInfo.title %></a>
             </h1>
-            <span class="more">更多</span>
         </div>
         <div class="right fr">
             <div class="weather">
@@ -63,6 +67,11 @@
             </form>
         </div>
     </div>
+
+<!-- other -->
+<div id="notice" class="notice none animated">
+    <p>提示</p>
+</div>
 
 
 <script src="https://dn-cndserver.qbox.me/jquery-1.11.3.min.js"></script>
