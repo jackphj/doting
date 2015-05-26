@@ -5,10 +5,11 @@
      * 变量定义
      *
      */
+    var noteurl  = $('#paper .noteurl').html().replace(/http:\/\/doting.me\//gi, "");
     var textarea = document.getElementById('notetext'),      //文本框
         notesavebtn = document.getElementById('note-save');  //保存按钮
-    var lastSavedContent = '',								 //上次保存的内容缓存
-        lastSavedTime = 0,									 //上次保存的时间
+    var lastSavedContent = $('#notetext').html(),						 //上次保存的内容缓存
+        lastSavedTime = 0,									                 //上次保存的时间
         weatherapi = 'http://will.coding.io/weatherapi',     // 天气api
         autoSaveTimePay  = 3000;                             //3000ms一次自动保存
     var isIE=!!window.ActiveXObject,
@@ -37,30 +38,37 @@
                 cont  = jQuery.trim(document.getElementById('notetext').value),
                 url   = jQuery.trim(document.getElementById('paper-form').getAttribute('action'));
 
-            if(title || cont){
-                jQuery.ajax({
-                    type: 'post',
-                    data: {
-                        title: title,
-                        psw: psw,
-                        cont: cont
-                    },
-                    beforeSend: function(){
-                        btnChange('1');
-                    },
-                    success: function(res){
-                        if(res){
-                            callback(res, cont);
-                            btnChange('0');
-                        }
+            var postNote = function(){
+              jQuery.ajax({
+                  type: 'post',
+                  data: {
+                      title: title,
+                      psw: psw,
+                      cont: cont
+                  },
+                  beforeSend: function(){
+                      btnChange('1');
+                  },
+                  success: function(res){
+                      if(res){
+                          callback(res, cont);
+                          btnChange('0');
+                      }
 
-                    },
-                    error: function(res){
-                        btnChange('0');
-                    }
-                });
+                  },
+                  error: function(res){
+                      btnChange('0');
+                  }
+              });
+            };
+
+            if(title || cont){
+                postNote();
             }
             else{
+                if(cont !== lastSavedContent){
+                  postNote();
+                }
                 return ;
             }
 
@@ -90,7 +98,7 @@
                 lastSavedContent = cont;
                 lastSavedTime = Date.parse(new Date());
                 // 大提示框(即顶部提示)
-                showTopTip('已保存');
+                showTopTip('已保存', 'info');
             });
         }else{
             return ;
@@ -201,9 +209,9 @@
     (function(){
         var textarea = document.getElementById('notetext');
 
-        jQuery('.paper-btn').hide();
+        //jQuery('.paper-btn').hide();
         textarea.onfocus = function(){
-            jQuery('.paper-btn').show();
+            jQuery('.paper-btn').css('display', 'inline-block');
             var btnGroup = jQuery('.btn-group');
 
             if(btnGroup.hasClass('showed')){
@@ -260,11 +268,30 @@
 
     /**
      *  顶部提示框
-     *  @para {string} 需要提示的信息
+     *  @para {string} str: 需要提示的信息
+     *  @para {string} type: 信息/警告/错误
      *  @return null
      */
-     function showTopTip(str){
+     function showTopTip(str, type){
         var $dom = $('#notice');
+        var classname = "";
+
+        if(type){
+          switch(type){
+
+            case 'warn':
+              classname = "notice-warn";
+              break;
+
+            case 'error':
+              classname = "notice-error";
+              break;
+            default:
+              classname = '';
+              break;
+          }
+          $dom.addClass(classname);  //添加type-class
+        }
 
         $dom.find('p').html(str);
         $dom.removeClass('none fadeOutUp').addClass('fadeInDown');
@@ -275,6 +302,12 @@
             }
             clearTimeout(topTipTimer);
         }, 1500);
+        var topTipTimer2 = setTimeout(function(){
+          $dom.removeClass(classname);  //移除type-class
+          clearTimeout(topTipTimer2);
+        }, 2500);
+
+
      }
 
 
@@ -321,6 +354,164 @@
         var now = Date.parse(new Date());
         return (now - lastSavedTime > delay) ? true : false;
     }
+
+
+
+    /**
+     *  Sidebar切换
+     *
+     *  @para {string}  open/close
+     */
+    function switchSidebar(status){
+    	var $side = $('#sidebar');
+    	var sWidth = $side.width();
+
+    	if(status === 'open'){
+    		$side.animate({"left": '0'}, 300, 'swing').addClass('barShodow');
+    	}
+    	else if(status === 'close'){
+    		$side.animate({"left": -sWidth}, 300, 'swing').removeClass('barShodow');
+    	}
+    }
+
+    //call
+    $('#header .more').on('click', function(){
+    	switchSidebar('open');
+    });
+    $('#sidebar .close-sidebar').on('click', function(){
+    	switchSidebar('close');
+    })
+
+
+
+
+    /**
+     *  弹出/隐藏对话框
+     *
+     *  @para {string}  domId  :  选择器
+     *  @para {string}  status :  open/close
+     *  @para {string}  btnfunc:  此时确认按钮的功能(n-新建,e-更改,d-删除)
+     */
+    function switchDialog(domId, status, btnfunc){
+    	var $dialog = $(domId),
+    		$layer = $('#blackLayer');
+
+    	if(status === 'open'){
+    		$layer.removeClass('none');
+    		$dialog.removeClass('none');
+    	}
+    	else if(status === 'close'){
+    		$dialog.addClass('none');
+    		$layer.addClass('none');
+        $dialog.find('input[type="password"]').val('');
+    	}
+
+      if(btnfunc){
+        var text = '确认';
+        switch(btnfunc){
+          case 'n':
+            text = '加密';
+            break;
+          case 'e':
+            text = '更改';
+            break;
+          case 'd':
+            text = '移除';
+            break;
+          default:
+            text = '确认';
+            break;
+        }
+
+        $dialog.find('.saveit').html(text);
+      }
+    }
+
+
+
+    /**
+     *  添加密码、修改密码、移除密码
+     *  参数对应： n,e,d
+     */
+    $('#sidebar .addKey').on('click', function(){
+    	//新建密码
+      switchSidebar('close');                //关闭侧边栏
+    	switchDialog('#dialog', 'open', 'n');  //打开弹框
+    });
+
+
+
+
+    $('#dialog .cancel').on('click', function(){
+    	$('#ipt-addNotePwd').val('');
+    	switchDialog('#dialog', 'close');
+    });
+
+
+
+
+    /**
+     *  弹出框的表单提交函数
+     *  @para {string} func: 功能：新建密码n/更改密码e/移除密码d
+     */
+    function postDialog(func){
+      var $ipt_old = $('#ipt-oldPwd'),
+          $ipt_new = $('#ipt-newPwd'),
+          $ipt_re = $('#ipt-renewPwd');
+
+      var notetoken = $.cookie('token_'+noteurl.toUpperCase());
+      if(!notetoken) notetoken = "";
+
+      var checkForm = {isPass: true, errmsg: ""};
+
+
+      if(func === "n"){
+        //新建密码
+        if($ipt_new.val() && $ipt_re.val()){
+          //不为空
+          if($ipt_new.val() !== $ipt_re.val()){
+            checkForm = {isPass: false, errmsg: '两次密码不匹配'};
+          }
+        }
+        else{
+          checkForm = {isPass: false, errmsg: '密码不能为空'};
+        }
+      }
+      else if(func === 'e'){
+        //更改
+      }
+      else if(func === 'd'){
+        //移除
+      }
+
+      if(!checkForm.isPass){
+        showTopTip(checkForm.errmsg, 'warn');
+        return false;
+      }
+
+      //Todo: post
+      alert('提交');
+
+
+    }
+
+    //弹出框的确认按钮
+    var $btn_savedialog = $('#dialog .saveit'),
+        $ipt_re         = $('#ipt-renewPwd');
+    $btn_savedialog.on('click', function(){
+      var status = $(this).data('status'),
+          func   = $(this).data('func');
+
+      if(status = 'ready'){
+        postDialog(func);
+      }
+    });
+    $ipt_re.on('keyup', function(e){
+      if(e.keyCode === 13){
+        $btn_savedialog.trigger('click');
+      }
+    });
+
 
 
 }());

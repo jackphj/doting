@@ -3,3 +3,9 @@
 #header{
 	border-bottom: 1px solid #dfdfdf;
 }
+#sidebar{
+	border-right: 1px solid #c5c5c5;
+}
+#sidebar .item .addKey span:before{
+	display: none;
+}

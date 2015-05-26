@@ -43,7 +43,8 @@ module.exports = function(app){
 					url: settings.sitedomain +'/'+noteurl,
 					time: moment().format('YYYY-MM-DD HH:mm'),
 					title: '',
-					content: ''
+					content: '',
+					hasKey: 'nokey'
 				};
 			}else{
 				if(note.key){  //有密码
@@ -54,7 +55,8 @@ module.exports = function(app){
 						url: settings.sitedomain +'/'+noteurl,
 						time: '上次更新：'+moment(note.update_at).format('YYYY-MM-DD HH:mm'),
 						title: note.title,
-						content: note.content
+						content: note.content,
+						hasKey: 'nokey'
 					};
 				}
 			}
@@ -176,6 +178,19 @@ module.exports = function(app){
 			}
 		});
 
+	});
+
+
+	app.post('/api/notekey', function(req, res){
+		var noteurl = req.params.noteurl;
+		var md5 = crypto.createHash('md5');
+
+		var noteurl = req.body.noteurl,
+		    notepsw = md5.update(req.body.notepsw).digest('hex'),
+		    remember_key = req.body.remember_key;
+		var ip = tools.getClientIP(req);
+		logInfo.info('收到post请求来自:'+ip);
+		var result = {};
 	});
 
 
