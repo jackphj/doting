@@ -8,7 +8,7 @@ var crypto = require('crypto');
 var log4js    = require('log4js');
 var logConfig = require('../common/logConfig.js');
 log4js.configure(logConfig(__dirname));
-var logInfo   = log4js.getLogger('onehour');
+var logInfo   = log4js.getLogger('normal');
 
 module.exports = function(app){
 	var siteInfo = {
@@ -77,7 +77,7 @@ module.exports = function(app){
 		    psw = md5.update(req.body.psw).digest('hex'),
 		    content = req.body.cont;
 		var ip = tools.getClientIP(req);
-		logInfo.info('收到post请求来自:'+ip);
+		//logInfo.info('收到post请求来自:'+ip);
 		var result = {};
 
 
@@ -189,7 +189,7 @@ module.exports = function(app){
 		    notepsw = md5.update(req.body.notepsw).digest('hex'),
 		    remember_key = req.body.remember_key;
 		var ip = tools.getClientIP(req);
-		logInfo.info('收到post请求来自:'+ip);
+		//logInfo.info('收到post请求来自:'+ip);
 		var result = {};
 	});
 

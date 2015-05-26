@@ -54,7 +54,7 @@ function getFreshNoteUrl(callback) {
         if (note === null) {
             callback(null, noteUrl);
         } else {
-        	logInfo.warn("请求到已存在的笔记:" + note);
+        	//logInfo.warn("请求到已存在的笔记:" + note);
             noteUrl = ep = null;
             getFreshNoteUrl(callback);
         }
