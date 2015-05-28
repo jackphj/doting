@@ -1,2 +1,2 @@
-## © 一点笔记
-A project by Nodejs.
+## 海风笔记
+[http://doting.me](http://doting.me) By Nodejs.
