@@ -70,7 +70,12 @@ function getNoteByUrl(url, callback){
     var ep = new eventproxy();
     Note.getNoteByUrl(url, ep.done('note')); //获取note
     ep.all('note', function(note) {
-        callback(note);
+        if (note === null) {
+            callback(null, url);
+        }else{
+            callback(note);
+        }
+        
     });
 }
 

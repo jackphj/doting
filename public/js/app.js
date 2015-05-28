@@ -5,18 +5,18 @@
      * 变量定义
      *
      */
-    var noteurl  = $('#paper .noteurl').html().replace(/http:\/\/doting.me\//gi, "");
-    var textarea = document.getElementById('notetext'),      //文本框
-        notesavebtn = document.getElementById('note-save');  //保存按钮
-    var lastSavedContent = $('#notetext').html(),						 //上次保存的内容缓存
-        lastSavedTime = 0,									                 //上次保存的时间
-        weatherapi = 'http://will.coding.io/weatherapi',     // 天气api
-        autoSaveTimePay  = 3000;                             //3000ms一次自动保存
-    var isIE=!!window.ActiveXObject,
-    	isIE6=isIE&&!window.XMLHttpRequest,
-    	isIE8=isIE&&!!document.documentMode,
-    	isIE7=isIE&&!isIE6&&!isIE8;
-
+		var noteurl  = $('#paper .noteurl').html().replace(/http:\/\/doting.me\//gi, "");
+		var textarea = document.getElementById('notetext'),      //文本框
+		notesavebtn  = document.getElementById('note-save');  //保存按钮
+		var lastSavedContent = $('#notetext').html(),						 //上次保存的内容缓存
+		lastSavedTime        = 0,									                 //上次保存的时间
+		weatherapi           = 'http://will.coding.io/weatherapi',     // 天气api
+		autoSaveTimePay      = 3000;                             //3000ms一次自动保存
+		var isIE =!!window.ActiveXObject,
+		   isIE6 =isIE&&!window.XMLHttpRequest,
+		   isIE8 =isIE&&!!document.documentMode,
+		   isIE7 =isIE&&!isIE6&&!isIE8;
+		var api_setpwd = '/api/setpsw';
 
 
 
@@ -101,6 +101,7 @@
                 showTopTip('已保存', 'info');
             });
         }else{
+        	showTopTip('操作太快', 'warn');
             return ;
         }
     };
@@ -490,7 +491,30 @@
       }
 
       //Todo: post
-      alert('提交');
+      $.ajax({
+      		url: api_setpwd,
+      		data: {
+      			noteurl: noteurl,
+      			oldnotepsw: $ipt_old.val(),
+      			notepsw: $ipt_re.val()
+      		},
+      		type: 'post',
+      		success: function(res){
+      			var tempFunc = (new Function('window.resData=' + res))();
+      			if(resData.error === '0'){
+      				$.cookie('token_'+noteurl.toUpperCase(), resData.message.remember_key);
+      				showTopTip('加密成功', 'info');
+      				$('#dialog .cancel').trigger('click');
+      			}
+      			else{//服务器出错了
+      				showTopTip(resData.message, 'error');
+      				console.log(resData);
+      			}
+      		},
+      		error: function(err){
+      			console.log(err);
+      		}
+      });
 
 
     }

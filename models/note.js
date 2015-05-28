@@ -9,7 +9,9 @@ var NoteSchema = new Schema({
   author_id: { type: ObjectId },
   creator_ip: { type: String },
   updater_ip: { type: String },
-  key: { type: String }, // 密码
+  key: { type: String}, // 密码
+  remember_key: { type: String }, // cookie验证
+  remember_keydate: { type: Date}, // 有效期,到期时间
   visit_count: { type: Number, default: 0 },
   create_at: { type: Date, default: Date.now },
   update_at: { type: Date, default: Date.now },
