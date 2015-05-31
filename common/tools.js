@@ -31,9 +31,6 @@ function getRandom(type, length) {
 
 
 
-
-
-
 function getFreshNoteUrl(callback) {
 	var count = (function(){
 		var id =0;

@@ -46,7 +46,9 @@ exports.updateNote = function(url, title, content, ip, callback){
 
         note.title     = title;
         note.content   = content;
-        note.updater_ip = ip;
+        if(ip){
+          note.updater_ip = ip;
+        }
         note.update_at = moment().format('YYYY-MM-DD HH:mm:ss');
         note.save(callback);
       });
@@ -68,15 +70,17 @@ exports.updateNoteKey = function(url, key, ip, callback){
         }
 
         //生成remember_key
-        var remember_key = url + Date.parse(new Date()) + 'doting';
+        var remember_key = key + Date.parse(new Date()) + 'doting';
         var md5 = crypto.createHash('md5');
         remember_key = md5.update(remember_key).digest('hex');
 
         note.key        = key;
-        note.updater_ip = ip;
+        if(ip){
+          note.updater_ip = ip;
+        }
         note.remember_key = remember_key;
         //30天
-        note.remember_keydate  = moment().add('days', 30).format('YYYY-MM-DD HH:mm:ss');
+        note.remember_keydate  = moment().add(30, 'days').format('YYYY-MM-DD HH:mm:ss');
         note.update_at  = moment().format('YYYY-MM-DD HH:mm:ss');
         note.save(callback(null, note));
       });
@@ -84,13 +88,113 @@ exports.updateNoteKey = function(url, key, ip, callback){
 
 
 
+/**
+ * 分享/取消分享笔记
+ * @param {String} url 笔记的url
+ * @param {Boolean} isShare 是否分享
+ * @param {Function} callback 回调函数
+ */
+exports.changeShare = function(url, isShare, ip, callback){
+    Note.findOne({note_url: url}, function (err, note) {
+        if (err) {
+          logInfo('更新笔记出错：'+ err + '笔记url:'+url);
+          return callback(err);
+        }
+        else if(!note){ //笔记尚未创建
+          return callback(null, null);
+        }
 
-exports.newAndSaveNote = function(note_url, title, content, author_id, creator_ip, updater_ip, key, remember_key, remember_keydate, visit_count, create_at, update_at, content_is_html, deleted, callback) {
+
+        note.is_shared = isShare;
+        if(ip){
+          note.updater_ip = ip;
+        }
+        note.save(callback(null, note));
+      });
+};
+
+
+
+/**
+ * 验证remember_key
+ * @param {String} url          笔记的url
+ * @param {String} remember_key 笔记的remember_key
+ * @return {Boolen}
+ */
+exports.isRightRemember = function(url,remember_key, callback){
+    Note.findOne({note_url: url}, function (err, note) {
+        if (err) {
+          callback(err, null);
+        }
+        else if(!note){
+          callback(null, null);
+        }
+        else if(!note.remember_key){  //不存在remember_key返回通过
+          callback(null, note);
+        }
+        else if(note.remember_key === remember_key){
+          callback(null, note);
+        }
+        else if(note.remember_key !== remember_key){
+          callback('wrong remember_key', note);
+        }
+        else{
+          callback('unknowerr', note);
+        }
+    });
+};
+
+
+
+/**
+ * 更新/删除笔记的remember_key
+ * @param {String} url          笔记的url
+ * @param {String} key          笔记的key
+ * @param {Function} callback 回调函数:
+ * err: 1=获取笔记出错, 2=笔记没有密码, 3=密码验证没通过
+ */
+exports.checkNotePwd = function(url, key, callback){
+    Note.findOne({note_url: url}, function (err, note) {
+        if (err || !note) {
+          logInfo('更新笔记出错：'+ err + '笔记url:'+note_url);
+          return callback(1, null);
+        }
+        else if(!note.key){
+          return callback(2, null);
+        }
+        else{
+          //验证通过
+          if(key === note.key){
+              //生成remember_key
+              var remember_key = key + Date.parse(new Date()) + 'doting';
+              var md5 = crypto.createHash('md5');
+              remember_key = md5.update(remember_key).digest('hex');
+              //更新
+              note.remember_key = remember_key;
+              //30天
+              note.remember_keydate  = moment().add(30, 'days').format('YYYY-MM-DD HH:mm:ss');
+              note.update_at  = moment().format('YYYY-MM-DD HH:mm:ss');
+              note.save(callback(0, note));
+          }
+          else{
+            return callback(3, null);
+          }
+        }
+
+        
+      });
+};
+
+
+
+
+exports.newAndSaveNote = function(note_url, title, content, isshare , author_id, creator_ip, updater_ip, key, remember_key, remember_keydate, visit_count, create_at, update_at, content_is_html, deleted, callback) {
   var note = new Note();
 
   note.note_url         = note_url;
   note.title            = title || '';
   note.content          = content || '';
+  note.is_shared        = isshare || false;
   note.author_id        = author_id || null;
   note.creator_ip       = creator_ip || '';
   note.updater_ip       = updater_ip || '';

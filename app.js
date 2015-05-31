@@ -33,7 +33,6 @@ routes(app);
 app.use(function(req, res, next) {
   var err = new Error('Not Found');
   err.status = 404;
-  console.log(req);
   logInfo.error('404:'+req.url);
   next(err);
 });
@@ -57,7 +56,7 @@ if (app.get('env') === 'development') {
 // no stacktraces leaked to user
 app.use(function(err, req, res, next) {
   res.status(err.status || 500);
-  res.render('error', {
+  res.render('404', {
     message: err.message,
     error: {}
   });

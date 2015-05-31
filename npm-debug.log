@@ -1,28 +1,23 @@
 0 info it worked if it ends with ok
-1 verbose cli [ 'c:\\Program Files (x86)\\nodejs\\node.exe',
-1 verbose cli   'c:\\Program Files (x86)\\nodejs\\node_modules\\npm\\bin\\npm-cli.js',
+1 verbose cli [ 'C:\\Program Files (x86)\\nodejs\\\\node.exe',
+1 verbose cli   'C:\\Program Files (x86)\\nodejs\\node_modules\\npm\\bin\\npm-cli.js',
 1 verbose cli   'start' ]
 2 info using npm@1.4.28
 3 info using node@v0.10.34
-4 verbose run-script [ 'prestart', 'start', 'poststart' ]
-5 info prestart doting@0.0.0
-6 info start doting@0.0.0
-7 verbose unsafe-perm in lifecycle true
-8 info doting@0.0.0 Failed to exec start script
-9 error doting@0.0.0 start: `supervisor ./bin/www`
-9 error Exit status 8
-10 error Failed at the doting@0.0.0 start script.
-10 error This is most likely a problem with the doting package,
-10 error not with npm itself.
-10 error Tell the author that this fails on your system:
-10 error     supervisor ./bin/www
-10 error You can get their info via:
-10 error     npm owner ls doting
-10 error There is likely additional logging output above.
-11 error System Windows_NT 6.2.9200
-12 error command "c:\\Program Files (x86)\\nodejs\\node.exe" "c:\\Program Files (x86)\\nodejs\\node_modules\\npm\\bin\\npm-cli.js" "start"
-13 error cwd d:\node\doting
-14 error node -v v0.10.34
-15 error npm -v 1.4.28
-16 error code ELIFECYCLE
-17 verbose exit [ 1, true ]
+4 verbose node symlink C:\Program Files (x86)\nodejs\\node.exe
+5 error Failed to parse json
+5 error Unexpected token “
+6 error File: D:\node\doting\package.json
+7 error Failed to parse package.json data.
+7 error package.json must be actual JSON, not just JavaScript.
+7 error
+7 error This is not a bug in npm.
+7 error Tell the package author to fix their package.json file. JSON.parse
+8 error System Windows_NT 6.2.9200
+9 error command "C:\\Program Files (x86)\\nodejs\\\\node.exe" "C:\\Program Files (x86)\\nodejs\\node_modules\\npm\\bin\\npm-cli.js" "start"
+10 error cwd D:\node\doting
+11 error node -v v0.10.34
+12 error npm -v 1.4.28
+13 error file D:\node\doting\package.json
+14 error code EJSONPARSE
+15 verbose exit [ 1, true ]

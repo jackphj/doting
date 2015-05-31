@@ -6,6 +6,7 @@ var NoteSchema = new Schema({
   note_url: { type: String },
   title: { type: String },
   content: { type: String },
+  is_shared: {type: Boolean, default: false},
   author_id: { type: ObjectId },
   creator_ip: { type: String },
   updater_ip: { type: String },

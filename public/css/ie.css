@@ -1,4 +1,7 @@
 @charset "utf-8";
+body{
+	height: 100%;
+}
 
 #header{
 	border-bottom: 1px solid #dfdfdf;
@@ -6,6 +9,14 @@
 #sidebar{
 	border-right: 1px solid #c5c5c5;
 }
-#sidebar .item .addKey span:before{
+#sidebar .item .item_li span:before{
 	display: none;
+}
+
+/* noteauth */
+#noteauth{
+	height: 100%;
+}
+#noteauth .ipt-wrapper{
+	border: 1px solid #d4d4d4;
 }

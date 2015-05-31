@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=1024" />
+    <title><%= siteInfo.sitename %></title>
+    <meta name="keywords" content="<%= siteInfo.keywords %>" />
+    <meta name="description" content="<%= siteInfo.describe %>" />
+    <meta name="renderer" content="webkit">
+    <meta name="baidu-site-verification" content="75jpdHDHmP" />
+    <link rel="shortcut icon" type="image/x-ico" href="https://dn-doting.qbox.me/favicon.ico" />
+    <link rel='stylesheet' href='/css/base.css' />
+    <link rel='stylesheet' href='/css/share.css' />
+    <link rel='stylesheet' href='/css/markdown.css' />
+    <!--[if lte IE 9]>
+    <link rel='stylesheet' href='/css/ie.css' />
+    <script src="/js/ie.js"></script>
+    <![endif]-->
+    <!--[if lte IE 6]>
+    <meta http-equiv="refresh" content="0; url=//hinpc.com/x/killie.html" />
+    <![endif]-->
+  </head>
+<body>
+    <!-- header -->
+    <!-- main -->
+    <div id="main">
+        <h1><%= siteInfo.describe %></h1>
+        <div id="paper">
+            <div class="note-title">
+                <% if(noteInfo.title){ %>
+                <h2>
+                    <%= noteInfo.title %>
+                </h2>
+                <% } %>
+            </div>
+            <div class="note-content markdown">
+                <% if(noteInfo.content){ %>
+                    <div class="content">
+                        <p><%- noteInfo.content %></p>
+                    </div>
+                <% } %>
+            </div>
+            
+            <% if(noteInfo.title === "" && noteInfo.content === ""){ %>
+                <div class="no-content">
+                    <p>
+                        No Content
+                        <br>
+                        <a href="//doting.me">http://doting.me</a>
+                    </p>
+                </div>
+            <% } %>
+        </div>
+    </div>
+
+
+<script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1255116367'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s11.cnzz.com/z_stat.php%3Fid%3D1255116367%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"));</script>
+</body>
+</html>

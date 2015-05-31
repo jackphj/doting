@@ -44,18 +44,39 @@
             <p class="close-sidebar">x</p>
         </div>
         <div class="item <%= noteInfo.hasKey %>">
-            <p class="addKey">
+            <p class="item_li addKey">
                 <span>加密笔记</span>
             </p>
-            <p class="removeKey">
+            <p class="item_li removeKey">
                 <span>移除密码</span>
+            </p>
+        </div>
+        <div class="item <%= noteInfo.isShared %>">
+            <p class="item_li shareNote">
+                <span>分享笔记</span>
+            </p>
+            <p class="item_li noShareNote">
+                <span>取消分享</span>
             </p>
         </div>
 
         <div class="copyright">
             <p>
-                2015 · <a href="http://hinpc.com">海风网</a>
+                2015 · <a href="//doting.me/share/about" target="_blank">关于本站</a>
             </p>
+            <p>
+                <a href="http://hinpc.com" target="_blank">海风网</a>
+                <a href="http://123.hinpc.com" target="_blank">海风导航</a>
+                <a href="http://blog.hinpc.com" target="_blank">Gallen's Blog</a>
+            </p>
+            <div>
+                <a href="https://nodejs.org/" class="imglink" target="_blank">
+                    <img src="images/nodejs.jpg" alt="nodejs">
+                </a>
+                <a href="https://www.digitalocean.com/?refcode=ede28ec3d4aa" class="imglink">
+                    <img src="images/digitalocean.png" alt="digitalocean">
+                </a>
+            </div>
         </div>
     </div>
 
@@ -97,15 +118,15 @@
 
 <div id="dialog" class="none">
     <div class="top">
-        <div class="ipt-wrap none">
+        <div class="ipt-wrap ipt-wrap-old none">
             <label for="ipt-oldPwd">原密码</label>
             <input type="password" maxlength="20" class="ipt-pwd" id="ipt-oldPwd">
         </div>
-        <div class="ipt-wrap">
+        <div class="ipt-wrap ipt-wrap-new">
             <label for="ipt-newPwd">密码</label>
             <input type="password" maxlength="20" class="ipt-pwd" id="ipt-newPwd">
         </div>
-        <div class="ipt-wrap">
+        <div class="ipt-wrap ipt-wrap-re">
             <label for="ipt-newPwd">重复密码</label>
             <input type="password" maxlength="20" class="ipt-pwd" id="ipt-renewPwd">
         </div>
@@ -117,9 +138,15 @@
 </div>
 <div id="blackLayer" class="none"></div>
 
+<div id="shareLink" style="display:none">
+    <input type="text" value="<%= noteInfo.url.replace('/','/share/') %>" data-url="<%= noteInfo.url.replace('/','/share/') %>">
+    <p class="tip">
+        复制链接分享 <span class="btn-small" id="shareover">完成</span>
+    </p>
+</div>
+
 
 <script src="https://dn-cndserver.qbox.me/jquery-1.11.3.min.js"></script>
-<script src="/js/jquery.cookie.js"></script>
 <script src="/js/app.js"></script>
 <script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1255116367'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s11.cnzz.com/z_stat.php%3Fid%3D1255116367%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"));</script>
 </body>

@@ -16,7 +16,8 @@
 		   isIE6 =isIE&&!window.XMLHttpRequest,
 		   isIE8 =isIE&&!!document.documentMode,
 		   isIE7 =isIE&&!isIE6&&!isIE8;
-		var api_setpwd = '/api/setpsw';
+		var api_setpwd = '/api/setpsw',
+        api_share  = '/api/sharestatus';
 
 
 
@@ -95,10 +96,16 @@
         // 保存间隔n秒:autoSaveTimePay
         if(hasDelayed(autoSaveTimePay)){
             notesave(function(res, cont){
-                lastSavedContent = cont;
-                lastSavedTime = Date.parse(new Date());
-                // 大提示框(即顶部提示)
-                showTopTip('已保存', 'info');
+                var res = jQuery.parseJSON(res);
+                if(res.error === '0'){
+                  lastSavedContent = cont;
+                  lastSavedTime = Date.parse(new Date());
+                  // 大提示框(即顶部提示)
+                  showTopTip('已保存', 'info');
+                }
+                else if(res.error === '1'){ //身份验证失败
+                  goAuth();
+                }
             });
         }else{
         	showTopTip('操作太快', 'warn');
@@ -120,14 +127,24 @@
         function autoSave(){
             clearTimeout(savetimer);
 
+            var this_content = textarea.value;
+			
             savetimer = setTimeout(function(){
-                notesave(function(res, cont){
-                    // 小提示(非顶部挺尸)
-                    lastSavedContent = cont;
-                    lastSavedTime = Date.parse(new Date());
-                    res = eval("(" + res + ")");
-                    saveTip('自动保存', res.time , '#saveTip');
-                });
+            	if(this_content !== lastSavedContent){
+            		notesave(function(res, cont){
+            			var res = jQuery.parseJSON(res);
+            		    if(res.error === '0'){
+            		        // 小提示(非顶部挺尸)
+            		        lastSavedContent = cont;
+            		        lastSavedTime = Date.parse(new Date());
+            		        saveTip('自动保存', res.time , '#saveTip');
+            		    }
+            		    else{
+            		      saveTip('自动保存失败', null , '#saveTip');
+            		    }
+            		});
+            	}
+                
             }, autoSaveTimePay);
         }
 
@@ -208,7 +225,6 @@
      *
      */
     (function(){
-        var textarea = document.getElementById('notetext');
 
         //jQuery('.paper-btn').hide();
         textarea.onfocus = function(){
@@ -236,7 +252,10 @@
      *  SaveTip, btnChange
      */
     function saveTip(text,time, domid){
-        jQuery('.nowtime').html('更新于：'+time);
+        if(!!time){
+          jQuery('.nowtime').html('更新于：'+time);
+        }
+        
         jQuery(domid).html(text).fadeIn();
         var timer = setTimeout(function(){
             jQuery(domid).fadeOut();
@@ -328,17 +347,37 @@
     			if(res){
 	    			var weather;
 	    			var result = [];  // 0~4天天气预报
-	    			for(var i=0; i<5; i++){
-	    				weather = res.data.forecast[i];
-	    				result.push(weather.type + weather.low.split(' ')[1] +'~'+ weather.high.split(' ')[1]);
-	    			}
+            if(!!res.data){
+              for(var i=0; i<5; i++){
+                weather = res.data.forecast[i];
+                result.push(weather.type + weather.low.split(' ')[1] +'~'+ weather.high.split(' ')[1]);
+              }
+            }
+            else{
+              return false;
+            }
+	    			
 	    			jQuery('.weather .city').html(city+':');
 	    			jQuery('.weather .type').html(result[0]);
 	    		}
     		}
     	});
     };
-    getWeather('上海');
+
+    var chooseCity = function(){
+      var weatherCity = getCookie('WeatherCity') || '上海';
+      getWeather(weatherCity);
+      $('.weather').on('click', function(){
+          var city=prompt("请输入您所在的城市","重庆");
+          if (city!=null && city!=""){
+            addCookie('WeatherCity', city, 24*30);
+            getWeather(city);
+          }
+      });
+
+    }
+    chooseCity();
+    
 
 
 
@@ -395,7 +434,11 @@
      */
     function switchDialog(domId, status, btnfunc){
     	var $dialog = $(domId),
-    		$layer = $('#blackLayer');
+    		$layer = $('#blackLayer'),
+    		$btn  = $('#dialog .saveit');
+    	var $w_old = $('.ipt-wrap-old'),
+    		$w_new = $('.ipt-wrap-new'),
+    		$w_re = $('.ipt-wrap-re');
 
     	if(status === 'open'){
     		$layer.removeClass('none');
@@ -408,16 +451,20 @@
     	}
 
       if(btnfunc){
+      	$btn.attr('data-func', btnfunc);
         var text = '确认';
         switch(btnfunc){
           case 'n':
             text = '加密';
-            break;
-          case 'e':
-            text = '更改';
+            $w_old.addClass('none');
+            $w_new.removeClass('none');
+            $w_re.removeClass('none');
             break;
           case 'd':
             text = '移除';
+            $w_old.removeClass('none');
+            $w_new.addClass('none');
+            $w_re.addClass('none');
             break;
           default:
             text = '确认';
@@ -438,6 +485,11 @@
     	//新建密码
       switchSidebar('close');                //关闭侧边栏
     	switchDialog('#dialog', 'open', 'n');  //打开弹框
+    });
+    $('#sidebar .removeKey').on('click', function(){
+    	//新建密码
+      switchSidebar('close');                //关闭侧边栏
+    	switchDialog('#dialog', 'open', 'd');  //打开弹框
     });
 
 
@@ -460,9 +512,6 @@
           $ipt_new = $('#ipt-newPwd'),
           $ipt_re = $('#ipt-renewPwd');
 
-      var notetoken = $.cookie('token_'+noteurl.toUpperCase());
-      if(!notetoken) notetoken = "";
-
       var checkForm = {isPass: true, errmsg: ""};
 
 
@@ -478,11 +527,12 @@
           checkForm = {isPass: false, errmsg: '密码不能为空'};
         }
       }
-      else if(func === 'e'){
-        //更改
-      }
+
       else if(func === 'd'){
         //移除
+        if(!$ipt_old.val()){
+        	checkForm = {isPass: false, errmsg: '密码不能为空'};
+        }
       }
 
       if(!checkForm.isPass){
@@ -490,7 +540,6 @@
         return false;
       }
 
-      //Todo: post
       $.ajax({
       		url: api_setpwd,
       		data: {
@@ -500,19 +549,37 @@
       		},
       		type: 'post',
       		success: function(res){
-      			var tempFunc = (new Function('window.resData=' + res))();
-      			if(resData.error === '0'){
-      				$.cookie('token_'+noteurl.toUpperCase(), resData.message.remember_key);
-      				showTopTip('加密成功', 'info');
+      			var resData = jQuery.parseJSON(res);
+      			if(resData.error === '0'){  //创建密码成功
       				$('#dialog .cancel').trigger('click');
+      				goAuth();
+      			}
+      			else if(resData.error === '999'){ //移除密码成功
+      				showTopTip('密码已移除', 'info');
+      				$('#dialog .cancel').trigger('click');
+      				$('.haskey').removeClass('haskey').addClass('nokey');
+      			}
+      			else if(resData.error === '1'){
+      				showTopTip('出错了', 'error');
+      			}
+      			else if(resData.error === '2'){
+      				showTopTip('验证失败', 'warn');
+      			}
+      			else if(resData.error === '3'){
+      				//原笔记已加密,新建密码失败
+      				goAuth();
+      			}
+      			else if(resData.error === '4'){
+      				//接收到密码为空
+      				showTopTip('请重试', 'info');
       			}
       			else{//服务器出错了
       				showTopTip(resData.message, 'error');
-      				console.log(resData);
+      				console.error(resData);
       			}
       		},
       		error: function(err){
-      			console.log(err);
+      			console.error(err);
       		}
       });
 
@@ -523,10 +590,11 @@
     var $btn_savedialog = $('#dialog .saveit'),
         $ipt_re         = $('#ipt-renewPwd');
     $btn_savedialog.on('click', function(){
-      var status = $(this).data('status'),
-          func   = $(this).data('func');
+      var status = $(this).attr('status'),
+          func;
 
       if(status = 'ready'){
+      	func = $(this).attr('data-func');
         postDialog(func);
       }
     });
@@ -536,6 +604,109 @@
       }
     });
 
+/**
+ * 跳转到验证页
+ */
+function goAuth(){
+  window.location.href = '/noteauth/'+noteurl;
+}
+
+
+
+
+/**
+ * 获取指定名称的cookie的值 
+ */
+function getCookie(objName) {
+  var arrStr = document.cookie.split("; ");
+  for (var i = 0; i < arrStr.length; i++) {
+    var temp = arrStr[i].split("=");
+    if (temp[0] == objName) return unescape(temp[1]);
+  }
+}
+/**
+ * 添加cookie
+ */
+function addCookie(name, value, expiresHours) {
+      var cookieString = name + "=" + escape(value);
+      //判断是否设置过期时间 
+      if (expiresHours > 0) {
+        var date = new Date();
+        date.setTime(date.getTime + expiresHours * 3600 * 1000);
+        cookieString = cookieString + "; expires=" + date.toGMTString();
+      }
+      document.cookie = cookieString;
+}
+
+
+/**
+ * 分享笔记
+ */
+var shareNoteFunc = function(){
+    var $sharenote = $('.shareNote'),
+        $nosharenote = $('.noShareNote'),
+        $shareinfo = $('#shareLink'),
+        $ipt_shareurl = $('#shareLink input'),
+        $close_sider = $('.close-sidebar'),
+        $over = $('#shareover');
+    var token_name = 'TOKEN_'+noteurl.toUpperCase();
+
+    //isShare: true/false
+    function changeShare(isShare){
+        if(lastSavedContent === ""){
+            showTopTip('内容不能为空', 'warn');
+            return false;
+        }
+        $.ajax({
+            url: api_share,
+            data: {
+                noteurl: noteurl,
+                token: getCookie(token_name),
+                isShare: isShare
+            },
+            type: 'POST',
+            success: function(res){
+              res = jQuery.parseJSON(res);
+              if(res.error === '0'){
+                  if(isShare){
+                      $shareinfo.fadeIn(200);
+                      $ipt_shareurl.val($ipt_shareurl.data('url')).select();
+                      $('.noshare').removeClass('noshare').addClass('hasShared');
+                  }
+                  else{
+                      showTopTip('已取消分享', 'info');
+                      $('.hasShared').removeClass('hasShared').addClass('noshare');
+                  }
+              }
+              else if(res.error === '2'){
+                goAuth();
+              }
+              else{ //返回服务器错误信息
+                console.error(res);
+              }
+            },
+            error: function(err){
+              console.error(err);
+            }
+        });
+    }
+
+    $sharenote.on('click', function(){
+        $close_sider.trigger('click');
+        changeShare(true);
+        
+    });
+    $nosharenote.on('click', function(){
+        $close_sider.trigger('click');
+        changeShare(false);
+        
+    });
+
+    $over.on('click', function(){
+        $shareinfo.fadeOut(300);
+    });
+};
+shareNoteFunc();
 
 
 }());
