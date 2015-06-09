@@ -5,6 +5,7 @@ var Note = require('../controllers').Note;
 var moment = require('moment');
 var crypto = require('crypto');
 markdown = require('markdown').markdown;
+var mobiRouter = require('./mobi');
 
 var log4js    = require('log4js');
 var logConfig = require('../common/logConfig.js');
@@ -19,12 +20,13 @@ module.exports = function(app){
 		sitename: settings.sitename,
 		keywords: settings.keywords,
 		describe: settings.describe,
-		sitedomain : settings.sitedomain
+		sitedomain : settings.sitedomain,
+		mobilesite : settings.mobilesite,
+		checkMobi: settings.checkMobile
 	};
 	var result = {};
 
 
-	app.get('/', auth.checkMobile);
 	app.get('/', function(req, res){
 		tools.getFreshNoteUrl(function(err, noteUrl){
 			if(err)
@@ -35,8 +37,31 @@ module.exports = function(app){
 	});
 
 
+
+	//==========================
+	//           移动端
+	//==========================
+	app.get('/m/', function(req, res){
+		tools.getFreshNoteUrl(function(err, noteUrl){
+			if(err)
+				return res.render('error', {message: err, error: {status: 503, stack: null}});
+
+			return res.redirect('/m/'+noteUrl);
+		});
+	});
+
+	app.get('/m/:noteurl([A-Za-z0-9]+)', auth.checkIsRightUrl);
+	app.get('/m/:noteurl([A-Za-z0-9]+)', mobiRouter.index);
+
+	app.get('/m/noteauth/:noteurl', mobiRouter.noteauth);
+
+
+	//==========================
+	//           PC端
+	//==========================
+
+
 	app.get('/:noteurl([A-Za-z0-9]+)', auth.checkIsRightUrl);
-	app.get('/:noteurl([A-Za-z0-9]+)', auth.checkMobile);
 	app.get('/:noteurl([A-Za-z0-9]+)', function(req, res){
 		var noteurl = req.params.noteurl;
 		var Cookies = {};
@@ -52,6 +77,7 @@ module.exports = function(app){
 			if(note === null){
 				noteInfo = {
 					url: settings.sitedomain +'/'+noteurl,
+					noteid: noteurl,
 					time: moment().format('YYYY-MM-DD HH:mm'),
 					title: '',
 					content: '',
@@ -61,6 +87,7 @@ module.exports = function(app){
 			}else{
 				noteInfo = {
 					url: settings.sitedomain +'/'+noteurl,
+					noteid: noteurl,
 					time: moment().format('YYYY-MM-DD HH:mm'),
 					title: decodeURI(note.title),
 					content: decodeURI(note.content),
@@ -189,7 +216,6 @@ module.exports = function(app){
 	});
 
 
-	app.get('/noteauth/:noteurl', auth.checkMobile);
 	app.get('/noteauth/:noteurl', function(req, res){
 		var noteurl = req.params.noteurl;
 		var Cookies = {};
@@ -226,21 +252,23 @@ module.exports = function(app){
 
 	app.post('/noteauth/:noteurl', function(req, res){
 		var noteurl = req.params.noteurl,
-			notepwd = req.body.note_pwd;
+			notepwd = req.body.note_pwd,
+			isMobile = req.body.isMobi;
+		console.log(isMobile);
 		if(notepwd !== ""){
 			var md5 = crypto.createHash('md5');
 			notepwd = md5.update(notepwd).digest('hex');
 
 			Note.checkNotePwd(noteurl, notepwd, function(errcode, note){
 				if(errcode === 1){ //没有获取到笔记
-					return res.redirect('/'+noteurl);
+					return isMobile? res.redirect('/m/'+noteurl) : res.redirect('/'+noteurl);
 				}
 				else if(errcode === 2){ //没有笔记密码
-					return res.redirect('/'+noteurl);
+					return isMobile? res.redirect('/m/'+noteurl) : res.redirect('/'+noteurl);
 				}
 				else if(errcode === 3){ //密码不对
 					console.error('密码验证失败:'+notepwd);
-					return res.redirect('/noteauth/'+noteurl);
+					return isMobile? res.redirect('/m/noteauth/'+noteurl) : res.redirect('/noteauth/'+noteurl);
 				}
 				else if(errcode === 0){
 			         var cookieOpinoin = {
@@ -249,12 +277,12 @@ module.exports = function(app){
 			         	httpOnly: false
 			         };
 			         res.cookie('TOKEN_'+noteurl.toUpperCase(), note.remember_key, cookieOpinoin);
-			         return res.redirect('/'+noteurl);
+			         return isMobile? res.redirect('/m/'+noteurl) : res.redirect('/'+noteurl);
 
 				}
 				else{
 					logInfo.error('未知错误@route:checkNotePwd');
-					return res.redirect('/noteauth/'+noteurl);
+					return isMobile? res.redirect('/m/noteauth'+noteurl) : res.redirect('/noteauth/'+noteurl);
 				}
 			});
 
@@ -283,6 +311,7 @@ module.exports = function(app){
 		var noteurl = req.params.noteurl;
 		var noteInfo = {
 			url: settings.sitedomain +'/'+noteurl,
+			noteid: noteurl,
 			time: moment().format('YYYY-MM-DD HH:mm'),
 			title: '',
 			content: '',

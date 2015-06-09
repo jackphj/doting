@@ -19,5 +19,8 @@ module.exports = {
 
     // mongodb 配置
     db: 'mongodb://127.0.0.1/doting_dev',
-    db_name: 'doting_dev'
+    db_name: 'doting_dev',
+
+    //是否检测手机访问
+    checkMobile: true
 };

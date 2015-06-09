@@ -24,11 +24,11 @@
         <div id="paper" class="in404">
             <div class="no-content">
                 <p>
+                    <% if(message === undefined || !message){ %>
+                        Page Not Found
+                    <% } %>
                     <% if(message){ %>
                         <%= message %>
-                    <% } %>
-                    <% if(message === undefined || message === ""){ %>
-                        Page Not Found
                     <% } %>
                     <br>
                     <a href="//doting.me">http://doting.me</a>

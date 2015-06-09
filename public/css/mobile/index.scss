@@ -1,0 +1,180 @@
+$iconResize: 0.5;
+
+body{
+	background-color: #fff;
+}
+.none{ display: none !important; }
+#container{
+	height: 100%;
+	padding-bottom: 60px;
+	box-sizing: border-box;
+}
+header{
+	position: relative;
+
+	#topimg{
+		display: block;
+		width: 100%;
+		height: auto;
+	}
+
+	.content{
+		position: absolute;
+		top: 0;
+		width: 100%;
+		height: 100%;
+
+		#motto{
+			padding-top: 40px;
+		}
+
+		h1,p{
+			text-align: center;
+			color: #fff;
+			font-size: 1.5rem;
+			line-height: 1.5;
+		}
+		h1{
+			position: absolute;
+			text-indent: -9999em;
+		}
+
+		#menuBtn{
+			display: block;
+			width: 57px*$iconResize;
+			height: 48px*$iconResize;
+			position: absolute;
+			top: 5px;
+			left: 5px;
+			background-color: transparent;
+			background-image: url(../../images/mobile/icons.png);
+			background-repeat: no-repeat;
+			background-position: 0 0;
+			background-size: 100%;
+			text-indent: -9999em;
+		}
+		#saveBtn{
+			// display: block;
+			// width: 57px*$iconResize;
+			// height: 57px*$iconResize;
+			position: absolute;
+			top: 7px;
+			right: 10px;
+			color: #fff;
+			text-decoration: none;
+			font-size: 18px;
+			font-weight: bold;
+			// background-color: transparent;
+			// background-image: url(../../images/mobile/icons.png);
+			// background-repeat: no-repeat;
+			// background-position: 0 -101px*$iconResize;
+			// background-size: 100%;
+			// text-indent: -9999em;
+		}
+	}
+}
+
+#title{
+	background-color: #fff;
+	border-bottom: 1px solid #d4d4d4;
+	text-align: center;
+	padding: 10px 0;
+
+	i{
+		position: absolute;
+		display: inline-block;
+		width: 57px*$iconResize;
+		height: 55px*$iconResize;
+		background-image: url(../../images/mobile/icons.png);
+		background-repeat: no-repeat;
+		background-position: 0 -46px*$iconResize;
+		background-size: 100%;
+	}
+	#ipt_title{
+		display: inline-block;
+		width: 200px;
+		background-color: #fff;
+		height: 22px;
+		font-size: 22px;
+		line-height: 22px;
+		color: #555;
+		padding: 6px 0 5px;
+		padding-left: 57px*$iconResize;
+	}
+	.wrapper{
+		position: relative;
+		&:before{
+			position: absolute;
+			top: 2px;
+			display: inline-block;
+			content: '';
+			width: 57px*$iconResize*0.8;
+			height: 55px*$iconResize*0.8;
+			background-image: url(../../images/mobile/icons.png);
+			background-repeat: no-repeat;
+			background-position: 0 -46px*$iconResize*0.8;
+			background-size: 100%;
+		}
+	}
+}
+
+#content{
+	padding: 15px;
+	background-color: #F5F5F5;
+
+	#ipt_content{
+		width: 100%;
+		min-height: 160px;
+		background-color: #F5F5F5;
+		border: none;
+		outline: none;
+		resize: vertical;
+		font-size: 16px;
+		line-height: 1.5;
+		-webkit-tap-highlight-color: transparent;
+		-webkit-box-sizing: border-box;
+		-moz-box-sizing: border-box;
+		box-sizing: border-box;
+	}
+}
+
+#footer{
+	text-align: center;
+	padding: 10px 0 9px;
+	font-size: 15px;
+	color: #AC9456;
+	border-top: 1px solid #d4d4d4;
+}
+
+
+/* animate */
+.animated {
+    -webkit-animation-duration: 1s;
+    animation-duration: 1s;
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both
+}
+@-webkit-keyframes fadeIn {
+    0% {
+        opacity: 0
+    }
+
+    100% {
+        opacity: 1
+    }
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0
+    }
+
+    100% {
+        opacity: 1
+    }
+}
+
+.fadeIn {
+    -webkit-animation-name: fadeIn;
+    animation-name: fadeIn
+}

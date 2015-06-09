@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=1024" />
+    <title><%= siteInfo.sitename %></title>
+    <meta name="keywords" content="<%= siteInfo.keywords %>" />
+    <meta name="description" content="<%= siteInfo.describe %>" />
+    <meta name="format-detection" content="telephone=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <link rel="shortcut icon" type="image/x-ico" href="https://dn-doting.qbox.me/favicon.ico" />
+    <link rel="apple-touch-icon" href="">
+    <link rel='stylesheet' href='/css/mobile/auth.css' />
+  </head>
+<body id="mobiAuth">
+
+<!--     <p><%= siteInfo.domain %></p>
+    <p><%= siteInfo.noteid %></p>
+    <p><%= siteInfo.update %></p>
+    <p><%= siteInfo.title %></p>
+    <p><%= siteInfo.content %></p>
+    <p><%= siteInfo.hasKey %></p>
+    <p><%= siteInfo.noteid %></p> -->
+    <section id="pic">
+        <div class="qCircle"></div>
+        <h1><%= siteInfo.domain %>/<%= siteInfo.noteid %></h1>
+    </section>
+    <section id="ipt">
+        <form action="/noteauth/<%= siteInfo.noteid %>" id="formAuth" method="post">
+        <div class="wrapper">
+            <input type="hidden" value="1" name="isMobi" id="isMobi">
+            <input type="password" id="pwd" name="note_pwd" placeholder="验证密码..">
+            <a href="javascript:void(0)" id="submit" data-nid="<%= siteInfo.noteid %>">提交</a>
+        </div>
+        </form>
+    </section>
+
+    <script src="https://dn-cndserver.qbox.me/zepto.js"></script>
+    <script src="/js/mobile/app.js"></script>
+</body>
+</html>

@@ -29,8 +29,6 @@ function getRandom(type, length) {
     return str;
 };
 
-
-
 function getFreshNoteUrl(callback) {
 	var count = (function(){
 		var id =0;
@@ -48,6 +46,7 @@ function getFreshNoteUrl(callback) {
     Note.getNoteByUrl(noteUrl, ep.done('note')); //获取note
 
     ep.all('note', function(note) {
+        console.log('t:'+note);
         if (note === null) {
             callback(null, noteUrl);
         } else {
@@ -58,10 +57,6 @@ function getFreshNoteUrl(callback) {
     });
 
 }
-
-
-
-
 
 function getNoteByUrl(url, callback){
     var ep = new eventproxy();
@@ -76,9 +71,6 @@ function getNoteByUrl(url, callback){
     });
 }
 
-
-
-
 function getClientIP(req){
     var ipAddress;
     var headers = req.headers;
@@ -89,8 +81,6 @@ function getClientIP(req){
     }
     return ipAddress;
 }
-
-
 
 
 // Exports

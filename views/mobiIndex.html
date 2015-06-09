@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=1024" />
+    <title><%= siteInfo.sitename %></title>
+    <meta name="keywords" content="<%= siteInfo.keywords %>" />
+    <meta name="description" content="<%= siteInfo.describe %>" />
+    <meta name="format-detection" content="telephone=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <link rel="shortcut icon" type="image/x-ico" href="https://dn-doting.qbox.me/favicon.ico" />
+    <link rel="apple-touch-icon" href="">
+    <link rel='stylesheet' href='/css/mobile/indexInit.css' />
+    <link rel='stylesheet' href='/css/mobile/TipBox.css' />
+  </head>
+<body>
+    <header>
+        <img src="/images/mobile/top.jpg" alt="海风笔记" id="topimg">
+        <div class="content">
+            <h1>海风笔记<small>移动版</small></h1>
+            <div id="motto" class="animated fadeIn">
+                <p>时间并不残忍</p>
+                <p>生活本来简单</p>
+            </div>
+            <a href="javascript:void(0)" id="menuBtn" class="animated fadeIn none">展开菜单</a>
+            <a href="javascript:void(0)" id="saveBtn" class="animated fadeIn" data-nid="<%= siteInfo.noteid %>">保存</a>
+        </div>
+    </header>
+    <section id="title">
+        <div class="wrapper">
+            <input type="text" id="ipt_title" value="<%= siteInfo.title %>" placeholder="<%= siteInfo.update %>">
+        </div>
+
+    </section>
+    <section id="content">
+        <textarea name="ipt_content" id="ipt_content" placeholder="开始笔记..."><%= siteInfo.content %></textarea>
+    </section>
+    <section id="footer">
+        <p>
+            <%= siteInfo.domain %>/<b><%= siteInfo.noteid %></b>    
+        </p>
+    </section>
+    <script src="https://dn-cndserver.qbox.me/zepto.js"></script>
+    <script src="/js/mobile/zepto.tipbox.js"></script>
+    <script src="/js/mobile/app.js"></script>
+</body>
+</html>

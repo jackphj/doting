@@ -11,6 +11,15 @@
     <link rel="shortcut icon" type="image/x-ico" href="https://dn-doting.qbox.me/favicon.ico" />
     <link rel='stylesheet' href='/css/base.css' />
     <link rel='stylesheet' href='/css/style.css' />
+    <script>
+    if(<%= siteInfo.checkMobi %>){
+        function isMobile(){var sUserAgent=navigator.userAgent.toLowerCase();var bIsIphoneOs=sUserAgent.match(/iphone os/i)=="iphone os";var bIsMidp=sUserAgent.match(/midp/i)=="midp";var bIsUc7=sUserAgent.match(/rv:1.2.3.4/i)=="rv:1.2.3.4";var bIsUc=sUserAgent.match(/ucweb/i)=="ucweb";var bIsAndroid=sUserAgent.match(/android/i)=="android";var bIsCE=sUserAgent.match(/windows ce/i)=="windows ce";var bIsWM=sUserAgent.match(/windows mobile/i)=="windows mobile";if(bIsIphoneOs||bIsMidp||bIsUc7||bIsUc||bIsAndroid||bIsCE||bIsWM){return true}else{return false}};
+        if(isMobile()){
+            var noteid = location.href.split('doting.me/')[1] || '';
+            location.href = '//<%= siteInfo.mobilesite %>/m/'+noteid;
+        }
+    }
+    </script>
     <!--[if lte IE 9]>
     <link rel='stylesheet' href='/css/ie.css' />
     <script src="/js/ie.js"></script>
